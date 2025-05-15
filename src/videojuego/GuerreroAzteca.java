@@ -672,7 +672,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         JFrame frame = new JFrame("Guerrero Azteca");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.add(new GuerreroAzteca());
+        frame.add(new PantallaCarga(frame));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
