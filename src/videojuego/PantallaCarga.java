@@ -174,15 +174,4 @@ public class PantallaCarga extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
-
-    // Método para usar desde GuerreroAzteca.java
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Guerrero Azteca");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.add(new PantallaCarga(frame));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
 }

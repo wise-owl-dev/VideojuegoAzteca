@@ -15,7 +15,6 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
 
     // Componentes gráficos
     private Image fondoInicio;
-    private Image imagenGuerrero;
     private JFrame parentFrame;
 
     // Animación del título
@@ -43,10 +42,10 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
         setBackground(Color.BLACK);
 
         // Crear áreas para los botones
-        botonJugar = new Rectangle(ANCHO / 2 - 100, 120, 200, 40);
-        botonInstrucciones = new Rectangle(ANCHO / 2 - 100, 170, 200, 40);
-        botonCreditos = new Rectangle(ANCHO / 2 - 100, 220, 200, 40);
-        botonSalir = new Rectangle(ANCHO / 2 - 100, 270, 200, 40);
+        botonJugar = new Rectangle(ANCHO / 2 - 100, 100, 200, 40);
+        botonInstrucciones = new Rectangle(ANCHO / 2 - 100, 150, 200, 40);
+        botonCreditos = new Rectangle(ANCHO / 2 - 100, 200, 200, 40);
+        botonSalir = new Rectangle(ANCHO / 2 - 100, 250, 200, 40);
 
         // Cargar recursos
         cargarRecursos();
@@ -64,7 +63,7 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
         try {
             // Cargar imágenes
             fondoInicio = ImageIO.read(new File("src/imagenes/fondos/fondo_inicio.png"));
-            imagenGuerrero = ImageIO.read(new File("src/imagenes/guerrero/guerrero_menu.png"));
+            ;
 
             // Cargar fuentes
             try {
@@ -100,14 +99,6 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
                     0, ALTO, new Color(60, 30, 10));
             g2d.setPaint(gradiente);
             g2d.fillRect(0, 0, ANCHO, ALTO);
-        }
-
-        // Dibujar decoraciones aztecas en los bordes
-        dibujarDecoracionesAztecas(g2d);
-
-        // Dibujar imagen del guerrero
-        if (imagenGuerrero != null) {
-            g.drawImage(imagenGuerrero, 50, ALTO - 200, null);
         }
 
         // Si estamos mostrando instrucciones o créditos
@@ -211,123 +202,84 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
                 boton.y + ((boton.height - fm.getHeight()) / 2) + fm.getAscent());
     }
 
-    private void dibujarDecoracionesAztecas(Graphics2D g2d) {
-        // Dibujar patrones aztecas en las esquinas
-        int tamañoPatron = 80;
-
-        // Esquina superior izquierda
-        dibujarPatronAzteca(g2d, 10, 10, tamañoPatron);
-
-        // Esquina superior derecha
-        dibujarPatronAzteca(g2d, ANCHO - tamañoPatron - 10, 10, tamañoPatron);
-
-        // Esquina inferior izquierda
-        dibujarPatronAzteca(g2d, 10, ALTO - tamañoPatron - 10, tamañoPatron);
-
-        // Esquina inferior derecha
-        dibujarPatronAzteca(g2d, ANCHO - tamañoPatron - 10, ALTO - tamañoPatron - 10, tamañoPatron);
-    }
-
-    private void dibujarPatronAzteca(Graphics2D g2d, int x, int y, int tamaño) {
-        g2d.setColor(new Color(230, 190, 50, 120));
-
-        // Dibujar un patrón simple de estilo azteca
-        int mitad = tamaño / 2;
-        int cuarto = tamaño / 4;
-
-        g2d.drawRect(x, y, tamaño, tamaño);
-        g2d.drawRect(x + cuarto, y + cuarto, mitad, mitad);
-        g2d.drawLine(x, y, x + tamaño, y + tamaño);
-        g2d.drawLine(x + tamaño, y, x, y + tamaño);
-        g2d.drawOval(x + cuarto, y + cuarto, mitad, mitad);
-
-        // Dibujar triángulos en los bordes
-        int[] xPoints = { x + mitad, x, x + tamaño };
-        int[] yPoints = { y - cuarto, y + mitad, y + mitad };
-        g2d.drawPolygon(xPoints, yPoints, 3);
-
-        int[] xPoints2 = { x + mitad, x, x + tamaño };
-        int[] yPoints2 = { y + tamaño + cuarto, y + mitad, y + mitad };
-        g2d.drawPolygon(xPoints2, yPoints2, 3);
-    }
-
     private void dibujarInstrucciones(Graphics2D g2d) {
         // Dibujar panel semitransparente para instrucciones
         g2d.setColor(new Color(0, 0, 0, 180));
-        g2d.fillRoundRect(100, 50, ANCHO - 200, ALTO - 100, 20, 20);
+        g2d.fillRoundRect(100, 20, ANCHO - 200, ALTO - 50, 20, 20);
 
         g2d.setColor(new Color(255, 215, 0));
-        g2d.drawRoundRect(100, 50, ANCHO - 200, ALTO - 100, 20, 20);
+        g2d.drawRoundRect(100, 20, ANCHO - 200, ALTO - 50, 20, 20);
 
         // Título de instrucciones
         // g2d.setFont(new Font("SansSerif", Font.BOLD, 8));
         g2d.setFont(fuenteTexto);
-        g2d.drawString("INSTRUCCIONES", 320, 85);
+        g2d.drawString("INSTRUCCIONES", 320, 40);
 
         // Texto de instrucciones
 
         g2d.setColor(Color.WHITE);
 
         String[] instrucciones = {
-                "• Presiona ESPACIO o FLECHA ARRIBA para saltar.",
-                "• Recoge frutas y oro para obtener puntos adicionales.",
-                "• Evita obstáculos como lanzas, piedras y pinchos.",
-                "• Acumula 3000 puntos para enfrentarte al jefe final.",
-                "• En el combate con el jefe, responde correctamente las preguntas para atacar.",
-                "• Presiona X o CONTROL para iniciar el ataque contra el jefe.",
-                "• Usa las teclas A, B, C, D para seleccionar respuestas y ENTER para confirmar."
+                "- Presiona ESPACIO o FLECHA ARRIBA para saltar.",
+                "- Recoge frutas y oro para obtener puntos adicionales.",
+                "- Evita obstáculos como lanzas, piedras y pinchos.",
+                "- Acumula 3000 puntos para enfrentarte al jefe final.",
+                "- En el combate con el jefe, responde correctamente las preguntas para atacar.",
+                "- Presiona X o CONTROL para iniciar el ataque contra el jefe.",
+                "- Usa las teclas A, B, C, D para seleccionar respuestas y ENTER para confirmar."
         };
 
-        int y = 130;
+        int y = 80;
         for (String linea : instrucciones) {
-            g2d.drawString(linea, 150, y);
+            g2d.drawString(linea, 120, y);
             y += 25;
         }
 
         // Botón de volver
-        Rectangle botonVolver = new Rectangle(350, 280, 100, 30);
+        Rectangle botonVolver = new Rectangle(350, 250, 100, 30);
         dibujarBotonSimple(g2d, botonVolver, "Volver", botonSeleccionado == 4);
     }
 
     private void dibujarCreditos(Graphics2D g2d) {
         // Dibujar panel semitransparente para créditos
         g2d.setColor(new Color(0, 0, 0, 180));
-        g2d.fillRoundRect(100, 50, ANCHO - 200, ALTO - 100, 20, 20);
+        g2d.fillRoundRect(100, 20, ANCHO - 200, ALTO - 50, 20, 20);
 
         g2d.setColor(new Color(255, 215, 0));
-        g2d.drawRoundRect(100, 50, ANCHO - 200, ALTO - 100, 20, 20);
+        g2d.drawRoundRect(100, 20, ANCHO - 200, ALTO - 50, 20, 20);
 
         // Título de créditos
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 28));
-        g2d.drawString("CRÉDITOS", 340, 85);
+        // g2d.setFont(new Font("SansSerif", Font.BOLD, 28));
+        g2d.setFont(fuenteTexto);
+        g2d.drawString("CRÉDITOS", 340, 40);
 
         // Texto de créditos
         g2d.setFont(fuenteTexto);
         g2d.setColor(Color.WHITE);
 
         String[] creditos = {
-                "Diseño y Programación: Tu Nombre",
+                "Diseño y Programación: Jesús Alexander Martínez Martínez",
                 "Arte y Gráficos: Nombre del Artista",
                 "Música y Sonido: Nombre del Músico",
-                "",
                 "Agradecimientos especiales a:",
                 "- Amigos y familia por su apoyo",
                 "- Profesores y mentores",
                 "- Comunidad de desarrolladores de juegos"
         };
 
-        int y = 130;
+        int y = 80;
         for (String linea : creditos) {
             g2d.drawString(linea, 150, y);
             y += 25;
         }
 
         // Botón de volver
-        Rectangle botonVolver = new Rectangle(350, 280, 100, 30);
+        Rectangle botonVolver = new Rectangle(350, 250, 100, 30);
         dibujarBotonSimple(g2d, botonVolver, "Volver", botonSeleccionado == 4);
     }
 
     private void dibujarBotonSimple(Graphics2D g2d, Rectangle boton, String texto, boolean seleccionado) {
+        g2d.setFont(fuenteMenu);
         // Fondo del botón
         if (seleccionado) {
             g2d.setColor(new Color(255, 215, 0));
@@ -341,7 +293,7 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
         g2d.drawRoundRect(boton.x, boton.y, boton.width, boton.height, 15, 15);
 
         // Texto
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
+        // g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
         FontMetrics fm = g2d.getFontMetrics();
         int anchoTexto = fm.stringWidth(texto);
 
@@ -365,7 +317,7 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
 
         if (showInstrucciones || showCreditos) {
             // Si estamos en instrucciones o créditos, revisar botón volver
-            Rectangle botonVolver = new Rectangle(350, 280, 100, 30);
+            Rectangle botonVolver = new Rectangle(350, 250, 100, 30);
             if (botonVolver.contains(punto)) {
                 showInstrucciones = false;
                 showCreditos = false;
@@ -412,7 +364,7 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
 
         if (showInstrucciones || showCreditos) {
             // Si estamos en instrucciones o créditos, revisar botón volver
-            Rectangle botonVolver = new Rectangle(350, 280, 100, 30);
+            Rectangle botonVolver = new Rectangle(350, 250, 100, 30);
             botonSeleccionado = botonVolver.contains(punto) ? 4 : -1;
             return;
         }
