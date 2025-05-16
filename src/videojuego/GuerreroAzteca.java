@@ -397,7 +397,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                     System.out.println("¡JEFE VENCIDO! Fase: " + faseJefeActual);
 
                     if (faseJefeActual >= 3) {
-                        // VICTORIA FINAL
+                        // VICTORIA FINAL (mantener como está)
                         musicaManager.cambiarA("victoria");
                         System.out.println("VICTORIA DETECTADA - Fase " + faseJefeActual);
 
@@ -409,50 +409,37 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         timerVictoria.setRepeats(false);
                         timerVictoria.start();
                     } else {
-                        // Fase completada, continuar al juego normal
-                        musicaManager.cambiarA("juego");
-                        puntuacion += 1000 * faseJefeActual;
-                        jefeCompletado = true;
-                        modoBatalla = false;
-                        jefeFinal = null;
-                        distanciaParaReaparicionJefe = 0;
-                        puntosParaSiguienteFase += 3000 * faseJefeActual;
+                        // *** CAMBIO AQUÍ: Esperar a que termine el efecto de fuego antes de volver al
+                        // modo carrera ***
 
-                        // Mensaje de victoria sin revelar la fase
+                        // Mostrar mensaje de victoria sin revelar la fase
                         mostrarMensajeTemporal("¡Jefe derrotado! Continúa tu aventura...", 2000);
 
+                        // Esperar a que termine el efecto de fuego antes de cambiar a modo carrera
+                        Timer timerTransicion = new Timer(1000, ev -> {
+                            // Asegurarse de que los efectos de fuego se desactiven completamente
+                            if (efectoFuegoJefe != null) {
+                                efectoFuegoJefe.desactivar();
+                            }
+                            if (efectoFuegoGuerrero != null) {
+                                efectoFuegoGuerrero.desactivar();
+                            }
+                            mostrandoEfectoFuego = false;
+
+                            // Cambiar a modo carrera después de la pausa
+                            musicaManager.cambiarA("juego");
+                            puntuacion += 1000 * faseJefeActual;
+                            jefeCompletado = true;
+                            modoBatalla = false;
+                            jefeFinal = null;
+                            distanciaParaReaparicionJefe = 0;
+                            puntosParaSiguienteFase += 3000 * faseJefeActual;
+
+                            ((Timer) ev.getSource()).stop();
+                        });
+                        timerTransicion.setRepeats(false);
+                        timerTransicion.start();
                     }
-                }
-            } else {
-                // Respuesta incorrecta: Mostrar fuego en el guerrero
-                int xFuego = guerrero.getX() + 25;
-                int yFuego = guerrero.getY() - 50;
-                efectoFuegoGuerrero.iniciar(xFuego, yFuego);
-                mostrandoEfectoFuego = true;
-
-                // Quitar vida directamente
-                vidasJugador--;
-
-                if (vidasJugador <= 0) {
-                    // MODIFICACIÓN: Asegurarse de que se desactive cualquier pregunta activa
-                    if (sistemaPregunta.estaActiva()) {
-                        sistemaPregunta.desactivar();
-                    }
-
-                    // MODIFICACIÓN: Esperar a que termine el efecto de fuego antes de iniciar la
-                    // animación de herido
-                    Timer timerInicioHerido = new Timer(800, ev -> {
-                        // Iniciar animación de herido
-                        guerrero.iniciarAnimacionHerido();
-                        System.out.println("Iniciando animación de herido por pérdida de vidas");
-
-                        // La transición a la pantalla final se manejará en actionPerformed
-                        // cuando se detecte que la animación de herido ha terminado
-
-                        ((Timer) ev.getSource()).stop();
-                    });
-                    timerInicioHerido.setRepeats(false);
-                    timerInicioHerido.start();
                 }
             }
         }
