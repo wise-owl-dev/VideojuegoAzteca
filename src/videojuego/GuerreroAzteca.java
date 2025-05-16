@@ -92,7 +92,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
             // Cargar nuevas imágenes
             fondoBatalla = ImageIO.read(getClass().getResource("/imagenes/fondos/fondo_batalla.png"));
             imagenCorazon = ImageIO.read(getClass().getResource("/imagenes/ui/corazon.png"));
-            
+
             musicaManager = MusicaManager.getInstancia();
 
             // Cargar frames de ataque
@@ -440,6 +440,38 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         timerTransicion.setRepeats(false);
                         timerTransicion.start();
                     }
+                }
+            } else {
+                // Código para manejar respuesta incorrecta
+                // Mostrar efecto de fuego en el guerrero
+                int xFuego = guerrero.getX() + 25; // Ajustar posición X para centrar en el jugador
+                int yFuego = guerrero.getY() - 100; // Ajustar posición Y para que aparezca a la altura del jugador
+                efectoFuegoGuerrero.iniciar(xFuego, yFuego);
+                mostrandoEfectoFuego = true;
+
+                // Reducir una vida al jugador
+                vidasJugador--;
+
+                // Verificar si el jugador ha perdido todas las vidas
+                if (vidasJugador <= 0) {
+                    // Esperar a que termine el efecto de fuego antes de iniciar la animación de
+                    // herido
+                    Timer timerHerido = new Timer(1000, ev -> {
+                        // Iniciar la animación de herido
+                        guerrero.iniciarAnimacionHerido();
+
+                        // Cambiar música a derrota
+                        musicaManager.cambiarA("derrota");
+
+                        // El juego sigue activo pero en estado de derrota para mostrar la animación
+                        juegoActivo = false;
+
+                        // No es necesario llamar a mostrarFinJuego aquí, ya que el bucle principal
+                        // detectará cuando la animación de herido termine y mostrará la pantalla final
+                        ((Timer) ev.getSource()).stop();
+                    });
+                    timerHerido.setRepeats(false);
+                    timerHerido.start();
                 }
             }
         }
