@@ -67,6 +67,8 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
 
     private boolean juegoGanado = false;
 
+    private MusicaManager musicaManager;
+
     public GuerreroAzteca() {
         setPreferredSize(new Dimension(ANCHO, ALTO));
         setBackground(new Color(255, 220, 180));
@@ -74,6 +76,10 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         addKeyListener(this);
         cargarImagenes();
         iniciarJuego();
+        musicaManager = MusicaManager.getInstancia();
+        if (!musicaManager.getMusicaActual().equals("juego")) {
+            musicaManager.reproducir("juego");
+        }
     }
 
     private void cargarImagenes() {
@@ -86,6 +92,8 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
             // Cargar nuevas imágenes
             fondoBatalla = ImageIO.read(new File("src/imagenes/fondos/fondo_batalla.png"));
             imagenCorazon = ImageIO.read(new File("src/imagenes/ui/corazon.png"));
+
+            musicaManager = MusicaManager.getInstancia();
 
             // Cargar frames de ataque
             framesAtaque = new Image[8];
@@ -390,6 +398,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
 
                     if (faseJefeActual >= 3) {
                         // VICTORIA FINAL
+                        musicaManager.cambiarA("victoria");
                         System.out.println("VICTORIA DETECTADA - Fase " + faseJefeActual);
 
                         // Animar brevemente la victoria antes de mostrar la pantalla final
@@ -401,6 +410,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         timerVictoria.start();
                     } else {
                         // Fase completada, continuar al juego normal
+                        musicaManager.cambiarA("juego");
                         puntuacion += 1000 * faseJefeActual;
                         jefeCompletado = true;
                         modoBatalla = false;
@@ -409,7 +419,8 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         puntosParaSiguienteFase += 3000 * faseJefeActual;
 
                         // Mensaje de victoria sin revelar la fase
-                        mostrarMensajeTemporal("¡Jefe derrotado! Continúa tu aventura...", 3000);
+                        mostrarMensajeTemporal("¡Jefe derrotado! Continúa tu aventura...", 2000);
+
                     }
                 }
             } else {
@@ -451,6 +462,12 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         juegoActivo = false;
         juegoGanado = victoria;
         timer.stop();
+
+        if (victoria) {
+            musicaManager.cambiarA("victoria");
+        } else {
+            musicaManager.cambiarA("derrota");
+        }
 
         // Desactivar cualquier pregunta pendiente
         if (sistemaPregunta != null && sistemaPregunta.estaActiva()) {
@@ -627,6 +644,8 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         jefeFinal = new JefeFinal(600, 50, faseJefeActual);
         siguienteEsArbol = true;
 
+        musicaManager.cambiarA("batalla");
+
         // Limpiar elementos del juego normal
         obstaculos.clear();
         aguilas.clear();
@@ -755,6 +774,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                 // Iniciar animación de herido
                 guerrero.iniciarAnimacionHerido();
 
+                musicaManager.cambiarA("derrota");
                 // El juego termina pero seguimos actualizando para mostrar la animación
                 juegoActivo = false;
                 return;
@@ -784,6 +804,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
             timer.stop();
         }
 
+        musicaManager.cambiarA("juego");
         // Limpiar elementos actuales
         obstaculos.clear();
         coleccionables.clear();

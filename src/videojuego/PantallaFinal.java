@@ -44,6 +44,8 @@ public class PantallaFinal extends JPanel implements ActionListener, MouseListen
     private int[] tamañosEstrellas;
     private float[] velocidadesRotacion;
 
+    private MusicaManager musicaManager;
+
     public PantallaFinal(JFrame parentFrame, boolean victoria, int puntuacion, int oro, int frutas) {
         this.parentFrame = parentFrame;
         this.victoria = victoria;
@@ -54,6 +56,15 @@ public class PantallaFinal extends JPanel implements ActionListener, MouseListen
         setPreferredSize(new Dimension(ANCHO, ALTO));
         setBackground(Color.BLACK);
 
+        // Inicializar manager de música
+        musicaManager = MusicaManager.getInstancia();
+
+        // Asegurarnos de que suena la música correcta según victoria o derrota
+        if (victoria && !musicaManager.getMusicaActual().equals("victoria")) {
+            musicaManager.cambiarA("victoria");
+        } else if (!victoria && !musicaManager.getMusicaActual().equals("derrota")) {
+            musicaManager.cambiarA("derrota");
+        }
         // Crear áreas para los botones
         botonJugarDeNuevo = new Rectangle(ANCHO / 2 - 150, 220, 300, 40);
         botonSalir = new Rectangle(ANCHO / 2 - 100, 270, 200, 30);
@@ -392,6 +403,8 @@ public class PantallaFinal extends JPanel implements ActionListener, MouseListen
 
     private void iniciarJuego() {
         timerAnimacion.stop();
+
+        musicaManager.cambiarA("juego");
 
         // Iniciar el juego principal
         GuerreroAzteca juego = new GuerreroAzteca();

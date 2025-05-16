@@ -36,6 +36,8 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
     private Font fuenteMenu;
     private Font fuenteTexto;
 
+    private MusicaManager musicaManager;
+
     public PantallaInicio(JFrame parentFrame) {
         this.parentFrame = parentFrame;
         setPreferredSize(new Dimension(ANCHO, ALTO));
@@ -53,6 +55,11 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
         // Añadir listeners
         addMouseListener(this);
         addMouseMotionListener(this);
+
+        musicaManager = MusicaManager.getInstancia();
+        if (!musicaManager.getMusicaActual().equals("menu")) {
+            musicaManager.reproducir("menu");
+        }
 
         // Iniciar animación
         timerAnimacion = new Timer(16, this);
@@ -387,6 +394,8 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
 
     private void iniciarJuego() {
         timerAnimacion.stop();
+
+        musicaManager.cambiarA("juego");
 
         // Iniciar el juego principal
         GuerreroAzteca juego = new GuerreroAzteca();

@@ -25,6 +25,8 @@ public class PantallaCarga extends JPanel implements ActionListener {
     private Font fuenteTitulo;
     private Font fuenteNormal;
 
+    private MusicaManager musicaManager;
+
     public PantallaCarga(JFrame parentFrame) {
         this.parentFrame = parentFrame;
         setPreferredSize(new Dimension(ANCHO, ALTO));
@@ -52,6 +54,9 @@ public class PantallaCarga extends JPanel implements ActionListener {
         } catch (Exception e) {
             System.out.println("Usando fuente por defecto: " + e.getMessage());
         }
+
+        musicaManager = MusicaManager.getInstancia();
+        musicaManager.reproducir("menu");
 
         // Iniciar el timer con periodo más lento para ver mejor la carga
         timerCarga = new Timer(50, this); // 10 FPS para ver mejor la animación
