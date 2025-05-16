@@ -389,9 +389,17 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
         timerAnimacion.stop();
 
         // Iniciar el juego principal
+        GuerreroAzteca juego = new GuerreroAzteca();
         parentFrame.getContentPane().removeAll();
-        parentFrame.add(new GuerreroAzteca());
+        parentFrame.add(juego);
         parentFrame.revalidate();
         parentFrame.repaint();
+
+        // Solicitar el foco para el panel de juego con SwingUtilities
+        // para asegurar que la solicitud de foco ocurra después de
+        // que la interfaz se haya actualizado completamente
+        SwingUtilities.invokeLater(() -> {
+            juego.requestFocusInWindow();
+        });
     }
 }

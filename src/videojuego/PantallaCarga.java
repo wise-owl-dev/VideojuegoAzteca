@@ -72,13 +72,15 @@ public class PantallaCarga extends JPanel implements ActionListener {
             g.fillRect(0, 0, ANCHO, ALTO);
         }
 
-        // Dibujar título
-        g.setFont(fuenteTitulo);
-        g.setColor(new Color(0, 0, 0, 200));
-        g.drawString("GUERRERO AZTECA", ANCHO / 2 - 190 + 3, posYTitulo + 3); // Sombra
-        g.setColor(new Color(255, 215, 0)); // Color dorado
-        g.drawString("GUERRERO AZTECA", ANCHO / 2 - 190, posYTitulo);
-
+        /*
+         * // Dibujar título
+         * g.setFont(fuenteTitulo);
+         * g.setColor(new Color(0, 0, 0, 200));
+         * g.drawString("GUERRERO AZTECA", ANCHO / 2 - 190 + 3, posYTitulo + 3); //
+         * Sombra
+         * g.setColor(new Color(255, 215, 0)); // Color dorado
+         * g.drawString("GUERRERO AZTECA", ANCHO / 2 - 190, posYTitulo);
+         */
         // Dibujar barra de carga - IMPORTANTE
         int anchoBarraCarga = 400;
         int altoBarraCarga = 20;
@@ -91,7 +93,9 @@ public class PantallaCarga extends JPanel implements ActionListener {
 
         // Progreso de la barra - Simplificado para asegurar su funcionamiento
         int anchoBarra = (int) (anchoBarraCarga * progresoActual / 100.0);
-        g.setColor(new Color(255, 215, 0));
+        g.setColor(new Color(255, 215, 0)); // Color dorado
+        // g.setColor(new Color(80, 200, 120));
+        // g.setColor(new Color(130, 174, 186));
         g.fillRect(xBarraCarga, yBarraCarga, anchoBarra, altoBarraCarga);
 
         // Borde de la barra
@@ -101,8 +105,8 @@ public class PantallaCarga extends JPanel implements ActionListener {
         // Texto de carga
         g.setFont(fuenteNormal);
         g.setColor(Color.WHITE);
-        String mensajeCarga = "Cargando recursos... " + progresoActual + "%";
-        g.drawString(mensajeCarga, xBarraCarga, yBarraCarga + altoBarraCarga + 25);
+        // String mensajeCarga = "Cargando recursos... " + progresoActual + "%";
+        // g.drawString(mensajeCarga, xBarraCarga, yBarraCarga + altoBarraCarga + 25);
 
         // Texto de depuración - quitar después
         g.setColor(Color.WHITE);
