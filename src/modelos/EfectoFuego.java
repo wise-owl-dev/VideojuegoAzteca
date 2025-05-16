@@ -29,7 +29,7 @@ public class EfectoFuego {
             // Cargar los 8 frames del fuego
             frames = new Image[8];
             for (int i = 0; i < 8; i++) {
-                frames[i] = ImageIO.read(new File("src/imagenes/efectos/fuego" + (i + 1) + ".png"));
+                frames[i] = ImageIO.read(getClass().getResource("/imagenes/efectos/fuego" + (i + 1) + ".png"));
             }
         } catch (IOException e) {
             System.out.println("Error al cargar imágenes del fuego: " + e.getMessage());
@@ -47,8 +47,9 @@ public class EfectoFuego {
     }
 
     public void actualizar() {
-        if (!activo)
+        if (!activo) {
             return;
+        }
 
         // Verificar si el efecto ha terminado
         long tiempoActual = System.currentTimeMillis();
@@ -65,8 +66,9 @@ public class EfectoFuego {
     }
 
     public void dibujar(Graphics g) {
-        if (!activo || frames == null)
+        if (!activo || frames == null) {
             return;
+        }
 
         if (frameActual < frames.length && frames[frameActual] != null) {
             // Dibujar el fuego en la posición indicada

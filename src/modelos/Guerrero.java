@@ -64,24 +64,20 @@ public class Guerrero {
             // Cargar imágenes de caminar (9 frames)
             framesCaminar = new Image[9];
             for (int i = 0; i < 9; i++) {
-                framesCaminar[i] = ImageIO.read(new File("src/imagenes/guerrero/guerrero" + (i + 1) + ".png"));
+                framesCaminar[i] = ImageIO.read(getClass().getResource("/imagenes/guerrero/guerrero" + (i + 1) + ".png"));
             }
 
             // Cargar imágenes de salto o usar frames de caminar si no hay
             framesSalto = new Image[2];
-            try {
-                framesSalto[0] = ImageIO.read(new File("src/imagenes/guerrero/salto1.png"));
-                framesSalto[1] = ImageIO.read(new File("src/imagenes/guerrero/salto2.png"));
-            } catch (IOException e) {
-                // Usar frames de caminar para el salto
-                framesSalto[0] = framesCaminar[0];
-                framesSalto[1] = framesCaminar[1];
-            }
+
+            // Usar frames de caminar para el salto
+            framesSalto[0] = framesCaminar[0];
+            framesSalto[1] = framesCaminar[1];
 
             // Cargar imágenes de herido (6 frames)
             framesHerido = new Image[6];
             for (int i = 0; i < 6; i++) {
-                framesHerido[i] = ImageIO.read(new File("src/imagenes/guerrero/herido" + (i + 1) + ".png"));
+                framesHerido[i] = ImageIO.read(getClass().getResource("/imagenes/guerrero/herido" + (i + 1) + ".png"));
             }
 
         } catch (IOException e) {

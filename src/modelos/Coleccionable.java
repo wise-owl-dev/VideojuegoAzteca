@@ -41,12 +41,12 @@ public class Coleccionable {
             if (tipo == 0) { // Oro
                 // Usar el subtipo para los diferentes tipos de oro
                 if (subtipo >= 1 && subtipo <= 10) {
-                    imagen = ImageIO.read(new File("src/imagenes/coleccionables/oro" + subtipo + ".png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/coleccionables/oro" + subtipo + ".png"));
                 } else {
-                    imagen = ImageIO.read(new File("src/imagenes/coleccionables/oro1.png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/coleccionables/oro1.png"));
                 }
             } else { // Fruta
-                imagen = ImageIO.read(new File("src/imagenes/coleccionables/fruta.png"));
+                imagen = ImageIO.read(getClass().getResource("/imagenes/coleccionables/fruta.png"));
             }
         } catch (IOException e) {
             System.out.println("Error al cargar imagen de coleccionable: " + e.getMessage());

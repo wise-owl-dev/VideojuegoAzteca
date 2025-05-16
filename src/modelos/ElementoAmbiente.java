@@ -51,9 +51,9 @@ public class ElementoAmbiente {
     private void cargarImagen() {
         try {
             if (tipo == 0 || tipo == 1) { // Árboles
-                imagen = ImageIO.read(new File("src/imagenes/ambiente/arbol" + (tipo + 1) + ".png"));
+                imagen = ImageIO.read(getClass().getResource("/imagenes/ambiente/arbol" + (tipo + 1) + ".png"));
             } else if (tipo == 2 || tipo == 3) { // Rocas
-                imagen = ImageIO.read(new File("src/imagenes/ambiente/roca" + tipo + ".png"));
+                imagen = ImageIO.read(getClass().getResource("/imagenes/ambiente/roca" + tipo + ".png"));
             }
 
             // Si la imagen se cargó correctamente, actualiza las dimensiones

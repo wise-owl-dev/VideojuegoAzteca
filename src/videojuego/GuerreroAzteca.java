@@ -85,20 +85,20 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
     private void cargarImagenes() {
         try {
             // Cargar imagen de fondo
-            fondoImagen = ImageIO.read(new File("src/imagenes/fondo.png"));
+            fondoImagen = ImageIO.read(getClass().getResource("/imagenes/fondo.png"));
             // Cargar imagen de suelo
-            sueloImagen = ImageIO.read(new File("src/imagenes/suelo.png"));
+            sueloImagen = ImageIO.read(getClass().getResource("/imagenes/suelo.png"));
 
             // Cargar nuevas imágenes
-            fondoBatalla = ImageIO.read(new File("src/imagenes/fondos/fondo_batalla.png"));
-            imagenCorazon = ImageIO.read(new File("src/imagenes/ui/corazon.png"));
-
+            fondoBatalla = ImageIO.read(getClass().getResource("/imagenes/fondos/fondo_batalla.png"));
+            imagenCorazon = ImageIO.read(getClass().getResource("/imagenes/ui/corazon.png"));
+            
             musicaManager = MusicaManager.getInstancia();
 
             // Cargar frames de ataque
             framesAtaque = new Image[8];
             for (int i = 0; i < 8; i++) {
-                framesAtaque[i] = ImageIO.read(new File("src/imagenes/guerrero/ataque" + (i + 1) + ".png"));
+                framesAtaque[i] = ImageIO.read(getClass().getResource("/imagenes/guerrero/ataque" + (i + 1) + ".png"));
             }
         } catch (IOException e) {
             System.out.println("Error al cargar imágenes de fondo: " + e.getMessage());
@@ -675,10 +675,10 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                 if (esperandoAtaque && !sistemaPregunta.estaActiva()) {
                     sistemaPregunta.generarPreguntaAleatoria();
                     esperandoAtaque = false;
-                    System.out.println("Pregunta generada - Fase: " + faseJefeActual +
-                            ", Vidas restantes jefe: " + jefeFinal.getVidasRestantes() + "/" +
-                            jefeFinal.getVidasTotales() +
-                            ", Vidas jugador: " + vidasJugador);
+                    System.out.println("Pregunta generada - Fase: " + faseJefeActual
+                            + ", Vidas restantes jefe: " + jefeFinal.getVidasRestantes() + "/"
+                            + jefeFinal.getVidasTotales()
+                            + ", Vidas jugador: " + vidasJugador);
                 }
 
                 // Actualizar animación de ataque si está atacando

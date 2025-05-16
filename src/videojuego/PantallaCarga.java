@@ -34,7 +34,7 @@ public class PantallaCarga extends JPanel implements ActionListener {
 
         // Intentar cargar la imagen de fondo
         try {
-            fondoCarga = ImageIO.read(new File("src/imagenes/fondos/fondo_carga.jpg"));
+            fondoCarga = ImageIO.read(getClass().getResource("/imagenes/fondos/fondo_carga.jpg"));
             System.out.println("Imagen de fondo cargada correctamente");
         } catch (IOException e) {
             System.out.println("Error al cargar imagen de fondo: " + e.getMessage());
@@ -47,7 +47,7 @@ public class PantallaCarga extends JPanel implements ActionListener {
 
         try {
             // Intenta cargar una fuente personalizada si existe
-            fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, new File("src/fuentes/azteca.ttf")).deriveFont(40f);
+            fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/azteca.ttf")).deriveFont(40f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(fuenteTitulo);
             System.out.println("Fuente personalizada cargada correctamente");

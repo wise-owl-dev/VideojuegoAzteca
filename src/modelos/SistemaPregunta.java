@@ -34,7 +34,7 @@ public class SistemaPregunta {
 
     private void cargarImagen() {
         try {
-            fondoPregunta = ImageIO.read(new File("src/imagenes/fondos/fondo_pregunta.png"));
+            fondoPregunta = ImageIO.read(getClass().getResource("/imagenes/fondos/fondo_pregunta.png"));
         } catch (IOException e) {
             System.out.println("Error al cargar imagen del fondo de pregunta: " + e.getMessage());
             fondoPregunta = null;

@@ -86,31 +86,31 @@ public class Obstaculo {
         try {
             switch (tipo) {
                 case 0: // Lanza
-                    imagen = ImageIO.read(new File("src/imagenes/obstaculos/lanza.png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/obstaculos/lanza.png"));
                     break;
                 case 1: // Piedra
-                    imagen = ImageIO.read(new File("src/imagenes/obstaculos/piedra.png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/obstaculos/piedra.png"));
                     break;
                 case 2: // Pinchos
                     // Usar el subtipo para los diferentes tipos de pinchos
                     if (subtipo >= 1 && subtipo <= 3) {
-                        imagen = ImageIO.read(new File("src/imagenes/obstaculos/pinchos" + subtipo + ".png"));
+                        imagen = ImageIO.read(getClass().getResource("/imagenes/obstaculos/pinchos" + subtipo + ".png"));
                     } else {
-                        imagen = ImageIO.read(new File("src/imagenes/obstaculos/pinchos1.png"));
+                        imagen = ImageIO.read(getClass().getResource("/imagenes/obstaculos/pinchos1.png"));
                     }
                     break;
                 case 3: // Artefacto
-                    imagen = ImageIO.read(new File("src/imagenes/ambiente/artefacto.png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/ambiente/artefacto.png"));
                     break;
                 case 4: // Jaguar
                     // Si hay subtipos de jaguares (1-3)
-                    imagen = ImageIO.read(new File("src/imagenes/ambiente/jaguar" + (subtipo > 0 ? subtipo : 1) + ".png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/ambiente/jaguar" + (subtipo > 0 ? subtipo : 1) + ".png"));
                     break;
                 case 5: // Rocas
-                    imagen = ImageIO.read(new File("src/imagenes/ambiente/roca" + (subtipo > 0 ? subtipo : 1) + ".png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/ambiente/roca" + (subtipo > 0 ? subtipo : 1) + ".png"));
                     break;
                 case 6: // Ruinas
-                    imagen = ImageIO.read(new File("src/imagenes/ambiente/ruina" + (subtipo > 0 ? subtipo : 1) + ".png"));
+                    imagen = ImageIO.read(getClass().getResource("/imagenes/ambiente/ruina" + (subtipo > 0 ? subtipo : 1) + ".png"));
                     break;
             }
         } catch (IOException e) {

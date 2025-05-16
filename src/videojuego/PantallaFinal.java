@@ -118,11 +118,11 @@ public class PantallaFinal extends JPanel implements ActionListener, MouseListen
 
     private void cargarRecursos() {
         try {
-            fondoFinal = ImageIO.read(new File("src/imagenes/fondos/fondo_inicio.png"));
+            fondoFinal = ImageIO.read(getClass().getResource("/imagenes/fondos/fondo_inicio.png"));
 
             // Cargar fuentes
             try {
-                fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, new File("src/fuentes/azteca.ttf")).deriveFont(40f);
+                fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/azteca.ttf")).deriveFont(40f);
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                 ge.registerFont(fuenteTitulo);
             } catch (FontFormatException | IOException e) {

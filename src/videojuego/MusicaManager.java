@@ -29,11 +29,11 @@ public class MusicaManager {
 
         // Configurar rutas de archivos de audio
         // La música de carga e inicio es la misma (menú)
-        rutasAudio.put("menu", "src/audio/menu.mp3");
-        rutasAudio.put("juego", "src/audio/juego.mp3");
-        rutasAudio.put("batalla", "src/audio/batalla.mp3");
-        rutasAudio.put("victoria", "src/audio/victoria.mp3");
-        rutasAudio.put("derrota", "src/audio/derrota.mp3");
+        rutasAudio.put("menu", "/audio/menu.mp3");
+        rutasAudio.put("juego", "/audio/juego.mp3");
+        rutasAudio.put("batalla", "/audio/batalla.mp3");
+        rutasAudio.put("victoria", "/audio/victoria.mp3");
+        rutasAudio.put("derrota", "/audio/derrota.mp3");
 
         reproduciendo = false;
         musicaActual = "";
@@ -67,7 +67,7 @@ public class MusicaManager {
         // Iniciar reproducción en un nuevo hilo
         hiloReproduccion = new Thread(() -> {
             try {
-                InputStream input = new BufferedInputStream(new FileInputStream(ruta));
+                InputStream input = new BufferedInputStream(getClass().getResourceAsStream(ruta));
                 reproductor = new Player(input);
                 musicaActual = nombre;
                 reproduciendo = true;

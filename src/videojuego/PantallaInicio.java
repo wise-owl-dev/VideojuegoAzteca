@@ -69,12 +69,11 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
     private void cargarRecursos() {
         try {
             // Cargar imágenes
-            fondoInicio = ImageIO.read(new File("src/imagenes/fondos/fondo_inicio.png"));
-            ;
+            fondoInicio = ImageIO.read(getClass().getResource("/imagenes/fondos/fondo_inicio.png"));
 
             // Cargar fuentes
             try {
-                fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, new File("src/fuentes/azteca.ttf")).deriveFont(40f);
+                fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/azteca.ttf")).deriveFont(40f);
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                 ge.registerFont(fuenteTitulo);
             } catch (FontFormatException | IOException e) {

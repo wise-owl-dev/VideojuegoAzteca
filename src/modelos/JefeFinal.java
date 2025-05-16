@@ -60,13 +60,13 @@ public class JefeFinal {
             // Cargar las tres imágenes del jefe
             imagenes = new Image[3];
             for (int i = 0; i < 3; i++) {
-                imagenes[i] = ImageIO.read(new File("src/imagenes/jefe/jefe" + (i + 1) + ".png"));
+                imagenes[i] = ImageIO.read(getClass().getResource("/imagenes/jefe/jefe" + (i + 1) + ".png"));
             }
 
             // Cargar imágenes de la barra de vida (13 sprites)
             barraVida = new Image[13];
             for (int i = 0; i < 13; i++) {
-                barraVida[i] = ImageIO.read(new File("src/imagenes/jefe/barra" + (i + 1) + ".png"));
+                barraVida[i] = ImageIO.read(getClass().getResource("/imagenes/jefe/barra" + (i + 1) + ".png"));
             }
 
             // Si la primera imagen se cargó correctamente, actualizar dimensiones

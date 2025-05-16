@@ -50,7 +50,7 @@ public class Aguila {
             // Cargar las tres imágenes del águila
             frames = new Image[3];
             for (int i = 0; i < 3; i++) {
-                frames[i] = ImageIO.read(new File("src/imagenes/aguila/aguila" + (i + 1) + ".png"));
+                frames[i] = ImageIO.read(getClass().getResource("/imagenes/aguila/aguila" + (i + 1) + ".png"));
             }
 
             // Si la primera imagen se cargó correctamente, actualizar dimensiones
