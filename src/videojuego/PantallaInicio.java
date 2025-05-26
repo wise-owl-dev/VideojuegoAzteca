@@ -73,7 +73,9 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
 
             // Cargar fuentes
             try {
-                fuenteTitulo = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/azteca.ttf")).deriveFont(40f);
+                fuenteTitulo = Font
+                        .createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/azteca.ttf"))
+                        .deriveFont(40f);
                 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
                 ge.registerFont(fuenteTitulo);
             } catch (FontFormatException | IOException e) {
@@ -264,16 +266,17 @@ public class PantallaInicio extends JPanel implements ActionListener, MouseListe
         g2d.setColor(Color.WHITE);
 
         String[] creditos = {
-                "Diseño y Programación: Jesús Alexander Martínez Martínez",
-                "Arte y Gráficos: Nombre del Artista",
-                "Música y Sonido: Nombre del Músico",
-                "Agradecimientos especiales a:",
-                "- Amigos y familia por su apoyo",
-                "- Profesores y mentores",
-                "- Comunidad de desarrolladores de juegos"
+                "Diseño y Programación: ",
+                "   - Karla Rocío Delgado Molina ",
+                "   - Jesús Alexander Martínez Martínez",
+                "   - Diego Misael Roque Hernández ",
+                "   - José Luis Ruiz Alonzo ",
+                "   - Acevedo Sesma Andrés Josué",
+                "   - Trinidad Merino Yael",
+                "Profesor: Hernandez Luis Moises Adrian"
         };
 
-        int y = 80;
+        int y = 60;
         for (String linea : creditos) {
             g2d.drawString(linea, 150, y);
             y += 25;
