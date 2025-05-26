@@ -263,11 +263,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
             sistemaPregunta.dibujar(g, ANCHO, ALTO);
         }
 
-        // Dibujar efectos de fuego
-        if (efectoFuegoJefe != null && efectoFuegoJefe.estaActivo()) {
-            efectoFuegoJefe.dibujar(g);
-        }
-
         if (efectoFuegoGuerrero != null && efectoFuegoGuerrero.estaActivo()) {
             efectoFuegoGuerrero.dibujar(g);
         }
@@ -321,11 +316,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                 g.setColor(Color.RED);
                 g.fillOval(20 + i * 40, 20, 30, 30);
             }
-        }
-
-        // Dibujar efectos de fuego
-        if (efectoFuegoJefe != null && efectoFuegoJefe.estaActivo()) {
-            efectoFuegoJefe.dibujar(g);
         }
 
         if (efectoFuegoGuerrero != null && efectoFuegoGuerrero.estaActivo()) {
@@ -390,11 +380,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
     private void procesarRespuesta(boolean esCorrecta) {
         if (modoBatalla && jefeFinal != null) {
             if (esCorrecta) {
-                // Mostrar efecto de fuego en el jefe inmediatamente
-                int xFuego = jefeFinal.getX() + 100;
-                int yFuego = jefeFinal.getY() + 80;
-                efectoFuegoJefe.iniciar(xFuego, yFuego);
-                mostrandoEfectoFuego = true;
 
                 // Quitar vida directamente al jefe sin usar timer
                 boolean jefeVencido = jefeFinal.perdioVida();
@@ -423,9 +408,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         // Esperar a que termine el efecto de fuego antes de cambiar a modo carrera
                         Timer timerTransicion = new Timer(1000, ev -> {
                             // Asegurarse de que los efectos de fuego se desactiven completamente
-                            if (efectoFuegoJefe != null) {
-                                efectoFuegoJefe.desactivar();
-                            }
                             if (efectoFuegoGuerrero != null) {
                                 efectoFuegoGuerrero.desactivar();
                             }
@@ -612,11 +594,10 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                 }
 
                 if (mostrandoEfectoFuego) {
-                    efectoFuegoJefe.actualizar();
                     efectoFuegoGuerrero.actualizar();
 
                     // Si ambos efectos han terminado, continuar el juego
-                    if (!efectoFuegoJefe.estaActivo() && !efectoFuegoGuerrero.estaActivo()) {
+                    if (!efectoFuegoGuerrero.estaActivo()) {
                         mostrandoEfectoFuego = false;
                     }
                 }
