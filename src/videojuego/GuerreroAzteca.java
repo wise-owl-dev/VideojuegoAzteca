@@ -29,7 +29,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
     private ArrayList<Obstaculo> obstaculos;
     private ArrayList<Aguila> aguilas;
     private ArrayList<Coleccionable> coleccionables;
-    private ArrayList<ElementoAmbiente> elementosAmbiente;
+
     private Timer timer;
     private int velocidad;
     private int puntuacion;
@@ -109,7 +109,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         guerrero = new Guerrero(80, SUELO);
         obstaculos = new ArrayList<>();
         coleccionables = new ArrayList<>();
-        elementosAmbiente = new ArrayList<>();
         aguilas = new ArrayList<>(); // Inicializar la lista de águilas
 
         // No generamos águilas iniciales, dejaremos que aparezcan naturalmente
@@ -201,11 +200,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                 aguila.dibujar(g);
             }
 
-            // Dibujar elementos de ambiente (solo árboles, decorativos)
-            for (ElementoAmbiente elemento : elementosAmbiente) {
-                elemento.dibujar(g);
-            }
-
             // Dibujar suelo
             if (sueloImagen != null) {
                 for (int x = -posicionFondo % 64; x < ANCHO; x += 64) {
@@ -279,12 +273,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                 g.drawImage(sueloImagen, x, SUELO, null);
             }
         }
-
-        // Dibujar elementos de ambiente que quedaron
-        for (ElementoAmbiente elemento : elementosAmbiente) {
-            elemento.dibujar(g);
-        }
-
         // Dibujar jefe final (se mantiene barra de vida visual, pero sin números)
         if (jefeFinal != null) {
             jefeFinal.dibujar(g);
@@ -604,36 +592,27 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
 
                 // Generar elementos solo si no estamos en modo batalla
                 if (!modoBatalla) {
-                    // Lógica alternada para árboles y obstáculos
-                    if (siguienteEsArbol) {
-                        if (random.nextInt(300) < 10) { // ~3% de probabilidad
-                            int tipo = random.nextInt(2); // 0-1: los dos tipos de árboles
-                            elementosAmbiente.add(new ElementoAmbiente(ANCHO, SUELO, tipo));
-                            siguienteEsArbol = false; // El siguiente será un obstáculo
+                    if (obstaculos.isEmpty()
+                            || obstaculos.get(obstaculos.size() - 1).getX() < ANCHO - random.nextInt(300) - 200) {
+                        int tipo = random.nextInt(7); // 0-6: incluir todos los tipos de obstáculos
+
+                        // Evitar rocas (tipo 5)
+                        if (tipo == 5) {
+                            tipo = random.nextInt(5); // 0-4
                         }
-                    } else {
-                        if (obstaculos.isEmpty()
-                                || obstaculos.get(obstaculos.size() - 1).getX() < ANCHO - random.nextInt(300) - 200) {
-                            int tipo = random.nextInt(7); // 0-6: incluir todos los tipos de obstáculos
 
-                            // Evitar rocas (tipo 5)
-                            if (tipo == 5) {
-                                tipo = random.nextInt(5); // 0-4
-                            }
+                        int subtipo = 1;
 
-                            int subtipo = 1;
-
-                            if (tipo == 2) { // Pinchos
-                                subtipo = random.nextInt(3) + 1;
-                            } else if (tipo == 4) { // Jaguar
-                                subtipo = random.nextInt(3) + 1;
-                            } else if (tipo == 6) { // Ruinas
-                                subtipo = random.nextInt(2) + 1;
-                            }
-
-                            obstaculos.add(new Obstaculo(ANCHO, SUELO, tipo, subtipo));
-                            siguienteEsArbol = true; // El siguiente será un árbol
+                        if (tipo == 2) { // Pinchos
+                            subtipo = random.nextInt(3) + 1;
+                        } else if (tipo == 4) { // Jaguar
+                            subtipo = random.nextInt(3) + 1;
+                        } else if (tipo == 6) { // Ruinas
+                            subtipo = random.nextInt(2) + 1;
                         }
+
+                        obstaculos.add(new Obstaculo(ANCHO, SUELO, tipo, subtipo));
+                        siguienteEsArbol = true; // El siguiente será un árbol
                     }
 
                     generarColeccionable();
@@ -669,14 +648,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         obstaculos.clear();
         aguilas.clear();
         coleccionables.clear();
-
-        // Dejar solo algunos elementos de ambiente para decoración
-        for (int i = elementosAmbiente.size() - 1; i >= 0; i--) {
-            if (random.nextBoolean()) {
-                elementosAmbiente.remove(i);
-            }
-        }
-
         // Mostrar un mensaje más misterioso sin revelar detalles específicos
         String mensajeFase = "¡Ha aparecido un nuevo jefe! Derrótalo respondiendo correctamente.";
         mostrarMensajeTemporal(mensajeFase, 3000); // Mostrar durante 3 segundos
@@ -743,17 +714,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
 
             if (obs.getX() < -100) {
                 obstaculos.remove(i);
-                i--;
-            }
-        }
-
-        // Mover elementos ambientales
-        for (int i = 0; i < elementosAmbiente.size(); i++) {
-            ElementoAmbiente elem = elementosAmbiente.get(i);
-            elem.mover(velocidad);
-
-            if (elem.getX() < -100) {
-                elementosAmbiente.remove(i);
                 i--;
             }
         }
@@ -827,7 +787,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         // Limpiar elementos actuales
         obstaculos.clear();
         coleccionables.clear();
-        elementosAmbiente.clear();
         aguilas.clear();
 
         // Restablecer todas las variables críticas
