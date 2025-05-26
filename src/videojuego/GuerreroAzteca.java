@@ -61,6 +61,16 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
     private long ultimoCambioFrameAtaque;
     private static final long DURACION_FRAME_ATAQUE = 100;
 
+    // Imágenes de disparo del guerrero (12 frames)
+    private Image[] framesDisparo;
+    private int frameDisparoActual;
+    private boolean disparando;
+    private long ultimoCambioFrameDisparo;
+    private static final long DURACION_FRAME_DISPARO = 80; // Más rápido para 12 frames
+    // Sistema de flechas
+    private ArrayList<Flecha> flechas;
+    private static final int MAX_FLECHAS = 3; // Máximo de flechas simultáneas
+
     // Vidas del jugador
     private int vidasJugador;
     private Image imagenCorazon;
@@ -80,6 +90,11 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         if (!musicaManager.getMusicaActual().equals("juego")) {
             musicaManager.reproducir("juego");
         }
+
+        // En el constructor, añadir:
+        flechas = new ArrayList<>();
+        disparando = false;
+        frameDisparoActual = 0;
     }
 
     private void cargarImagenes() {
@@ -95,13 +110,13 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
 
             musicaManager = MusicaManager.getInstancia();
 
-            // Cargar frames de ataque
-            framesAtaque = new Image[8];
-            for (int i = 0; i < 8; i++) {
-                framesAtaque[i] = ImageIO.read(getClass().getResource("/imagenes/guerrero/ataque" + (i + 1) + ".png"));
+            // Cargar frames de disparo con arco (12 frames)
+            framesDisparo = new Image[12];
+            for (int i = 0; i < 12; i++) {
+                framesDisparo[i] = ImageIO.read(getClass().getResource("/imagenes/guerrero/shoot" + (i + 1) + ".png"));
             }
         } catch (IOException e) {
-            System.out.println("Error al cargar imágenes de fondo: " + e.getMessage());
+            System.out.println("Error al cargar imágenes: " + e.getMessage());
         }
     }
 
@@ -280,14 +295,22 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
             // Opcional: Mostrar un mensaje más misterioso sin información específica
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.drawString("¡Ataca al jefe!", 600, 30);
+            g.drawString("¡Dispara con X o CTRL!", 550, 30);
         }
 
-        // Dibujar guerrero (normal o atacando)
-        if (atacando && framesAtaque != null && frameAtaqueActual < framesAtaque.length) {
+        // Dibujar guerrero (normal o disparando)
+        if (disparando && framesDisparo != null && frameDisparoActual < framesDisparo.length) {
+            g.drawImage(framesDisparo[frameDisparoActual], guerrero.getX(), guerrero.getY() - 51, null);
+        } else if (atacando && framesAtaque != null && frameAtaqueActual < framesAtaque.length) {
+            // Mantener el código de ataque por si quieres conservar ambos sistemas
             g.drawImage(framesAtaque[frameAtaqueActual], guerrero.getX(), guerrero.getY() - 51, null);
         } else {
             guerrero.dibujar(g);
+        }
+
+        // Dibujar flechas
+        for (Flecha flecha : flechas) {
+            flecha.dibujar(g);
         }
 
         // Dibujar vidas del jugador
@@ -346,22 +369,19 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
         } else {
             // Controles normales del juego
             if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_UP) {
-                if (juegoActivo) {
-                    if (!guerrero.estaSaltando()) {
-                        guerrero.saltar();
-                    }
-                } else {
-                    reiniciarJuego();
+                if (juegoActivo && !guerrero.estaSaltando()) {
+                    guerrero.saltar();
                 }
             }
 
-            // Atacar en modo batalla
+            // Disparar en modo batalla
             if (modoBatalla && (key == KeyEvent.VK_X || key == KeyEvent.VK_CONTROL)) {
-                if (!atacando && !sistemaPregunta.estaActiva()) {
-                    atacando = true;
-                    frameAtaqueActual = 0;
-                    ultimoCambioFrameAtaque = System.currentTimeMillis();
-                    esperandoAtaque = true;
+                if (!disparando && !sistemaPregunta.estaActiva() && flechas.size() < MAX_FLECHAS) {
+                    disparando = true;
+                    frameDisparoActual = 0;
+                    ultimoCambioFrameDisparo = System.currentTimeMillis();
+                    // ELIMINAMOS: esperandoAtaque = true;
+                    // La flecha se creará cuando la animación llegue al frame adecuado
                 }
             }
         }
@@ -385,7 +405,7 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                     System.out.println("¡JEFE VENCIDO! Fase: " + faseJefeActual);
 
                     if (faseJefeActual >= 3) {
-                        // VICTORIA FINAL (mantener como está)
+                        // VICTORIA FINAL
                         musicaManager.cambiarA("victoria");
                         System.out.println("VICTORIA DETECTADA - Fase " + faseJefeActual);
 
@@ -397,9 +417,6 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         timerVictoria.setRepeats(false);
                         timerVictoria.start();
                     } else {
-                        // *** CAMBIO AQUÍ: Esperar a que termine el efecto de fuego antes de volver al
-                        // modo carrera ***
-
                         // Mostrar mensaje de victoria sin revelar la fase
                         mostrarMensajeTemporal("¡Jefe derrotado! Continúa tu aventura...", 2000);
 
@@ -428,12 +445,26 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         timerTransicion.setRepeats(false);
                         timerTransicion.start();
                     }
+                } else {
+                    // Si el jefe NO fue vencido, DISPARAR AUTOMÁTICAMENTE otra flecha
+                    Timer timerAutoDisparo = new Timer(500, ev -> {
+                        if (modoBatalla && jefeFinal != null && !sistemaPregunta.estaActiva() &&
+                                !disparando && flechas.size() < MAX_FLECHAS && !juegoGanado) {
+                            // Iniciar animación de disparo automáticamente
+                            disparando = true;
+                            frameDisparoActual = 0;
+                            ultimoCambioFrameDisparo = System.currentTimeMillis();
+                        }
+                        ((Timer) ev.getSource()).stop();
+                    });
+                    timerAutoDisparo.setRepeats(false);
+                    timerAutoDisparo.start();
                 }
             } else {
                 // Código para manejar respuesta incorrecta
                 // Mostrar efecto de fuego en el guerrero
-                int xFuego = guerrero.getX() + 25; // Ajustar posición X para centrar en el jugador
-                int yFuego = guerrero.getY() - 100; // Ajustar posición Y para que aparezca a la altura del jugador
+                int xFuego = guerrero.getX() + 25;
+                int yFuego = guerrero.getY() - 100;
                 efectoFuegoGuerrero.iniciar(xFuego, yFuego);
                 mostrandoEfectoFuego = true;
 
@@ -454,13 +485,13 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
                         // El juego sigue activo pero en estado de derrota para mostrar la animación
                         juegoActivo = false;
 
-                        // No es necesario llamar a mostrarFinJuego aquí, ya que el bucle principal
-                        // detectará cuando la animación de herido termine y mostrará la pantalla final
                         ((Timer) ev.getSource()).stop();
                     });
                     timerHerido.setRepeats(false);
                     timerHerido.start();
                 }
+                // NO generamos nueva pregunta automáticamente en respuesta incorrecta
+                // El jugador debe disparar manualmente otra vez
             }
         }
     }
@@ -668,36 +699,53 @@ public class GuerreroAzteca extends JPanel implements ActionListener, KeyListene
             try {
                 jefeFinal.mover();
 
+                // Actualizar flechas
+                for (int i = 0; i < flechas.size(); i++) {
+                    Flecha flecha = flechas.get(i);
+                    flecha.mover();
+
+                    // Verificar colisión con el jefe
+                    if (flecha.estaActiva() && jefeFinal.getHitbox().intersects(flecha.getHitbox())) {
+                        flecha.desactivar();
+                        // Generar pregunta cuando la flecha impacta
+                        if (!sistemaPregunta.estaActiva() && !juegoGanado) {
+                            sistemaPregunta.generarPreguntaAleatoria();
+                        }
+                    }
+
+                    // Eliminar flechas inactivas
+                    if (!flecha.estaActiva()) {
+                        flechas.remove(i);
+                        i--;
+                    }
+                }
+
                 // Verificar si ya hemos ganado el juego
                 if (juegoGanado) {
-                    // Si ya ganamos, no generar más preguntas
                     return;
                 }
 
-                // Si estamos esperando un ataque y no hay pregunta activa, generar una
-                if (esperandoAtaque && !sistemaPregunta.estaActiva()) {
-                    sistemaPregunta.generarPreguntaAleatoria();
-                    esperandoAtaque = false;
-                    System.out.println("Pregunta generada - Fase: " + faseJefeActual
-                            + ", Vidas restantes jefe: " + jefeFinal.getVidasRestantes() + "/"
-                            + jefeFinal.getVidasTotales()
-                            + ", Vidas jugador: " + vidasJugador);
-                }
-
-                // Actualizar animación de ataque si está atacando
-                if (atacando) {
+                // Actualizar animación de disparo si está disparando
+                if (disparando) {
                     long tiempoActual = System.currentTimeMillis();
-                    if (tiempoActual - ultimoCambioFrameAtaque > DURACION_FRAME_ATAQUE) {
-                        frameAtaqueActual++;
-                        if (frameAtaqueActual >= framesAtaque.length) {
-                            frameAtaqueActual = 0;
-                            atacando = false;
+                    if (tiempoActual - ultimoCambioFrameDisparo > DURACION_FRAME_DISPARO) {
+                        frameDisparoActual++;
+
+                        // Crear la flecha en el frame 8 (cuando suelta la cuerda)
+                        if (frameDisparoActual == 8) {
+                            Flecha nuevaFlecha = new Flecha();
+                            nuevaFlecha.disparar(guerrero.getX(), guerrero.getY());
+                            flechas.add(nuevaFlecha);
                         }
-                        ultimoCambioFrameAtaque = tiempoActual;
+
+                        if (frameDisparoActual >= framesDisparo.length) {
+                            frameDisparoActual = 0;
+                            disparando = false;
+                        }
+                        ultimoCambioFrameDisparo = tiempoActual;
                     }
                 }
             } catch (Exception e) {
-                // Evitar que una excepción bloquee el juego
                 System.out.println("Error en actualizarBatallaJefe: " + e.getMessage());
                 e.printStackTrace();
             }
